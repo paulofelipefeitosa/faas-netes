@@ -153,7 +153,9 @@ func makeDeploymentSpec(request types.FunctionDeployment, existingSecrets map[st
 		return nil, err
 	}
 
-	deploymentSpec := &appsv1.Deployment{
+	privileged := true
+
+	var deploymentSpec = &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        request.Service,
 			Annotations: annotations,
@@ -204,6 +206,7 @@ func makeDeploymentSpec(request types.FunctionDeployment, existingSecrets map[st
 							ReadinessProbe:  probes.Readiness,
 							SecurityContext: &corev1.SecurityContext{
 								ReadOnlyRootFilesystem: &request.ReadOnlyRootFilesystem,
+								Privileged:             &privileged,
 							},
 						},
 					},
@@ -214,7 +217,6 @@ func makeDeploymentSpec(request types.FunctionDeployment, existingSecrets map[st
 			},
 		},
 	}
-
 	factory.ConfigureReadOnlyRootFilesystem(request, deploymentSpec)
 	factory.ConfigureContainerUserID(deploymentSpec)
 
