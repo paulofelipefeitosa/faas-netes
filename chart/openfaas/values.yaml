@@ -1,6 +1,6 @@
 functionNamespace: openfaas-fn  # Default namespace for functions
 
-async: true
+async: false
 
 exposeServices: true
 serviceType: NodePort
@@ -12,7 +12,7 @@ clusterRole: false            # Set to true to have OpenFaaS administrate multip
 # https://kubernetes.io/docs/concepts/policy/pod-security-policy/
 psp: false
 securityContext: true
-basic_auth: true
+basic_auth: false
 
 # image pull policy for openfaas components, can change to `IfNotPresent` in offline env
 openfaasImagePullPolicy: "Always"
@@ -38,20 +38,20 @@ gateway:
       cpu: "50m"
 
 faasnetes:
-  image: openfaas/faas-netes:0.9.9
+  image: pfelipefeitosa/faas-netes:latest
   readTimeout : "60s"
   writeTimeout : "60s"
   imagePullPolicy : "Always"    # Image pull policy for deployed functions
   httpProbe: true               # Setting to true will use HTTP for readiness and liveness probe on Pods (incompatible with Istio < 1.1.5)
   setNonRootUser: false
   readinessProbe:
-    initialDelaySeconds: 2
+    initialDelaySeconds: 0
     timeoutSeconds: 1           # Tuned-in to run checks early and quickly to support fast cold-start from zero replicas
-    periodSeconds: 2            # Reduce to 1 for a faster cold-start, increase higher for lower-CPU usage
+    periodSeconds: 1            # Reduce to 1 for a faster cold-start, increase higher for lower-CPU usage
   livenessProbe:
-    initialDelaySeconds: 2
+    initialDelaySeconds: 0
     timeoutSeconds: 1
-    periodSeconds: 2           # Reduce to 1 for a faster cold-start, increase higher for lower-CPU usage
+    periodSeconds: 1           # Reduce to 1 for a faster cold-start, increase higher for lower-CPU usage
   resources:
     requests:
       memory: "120Mi"
@@ -64,16 +64,6 @@ operator:
   # set this to false when creating multiple releases in the same cluster
   # must be true for the first one only
   createCRD: true
-  resources:
-    requests:
-      memory: "120Mi"
-      cpu: "50m"
-
-queueWorker:
-  image: openfaas/queue-worker:0.8.0
-  ackWait : "60s"
-  replicas: 1
-  gatewayInvoke: true
   resources:
     requests:
       memory: "120Mi"
@@ -96,14 +86,6 @@ alertmanager:
       memory: "25Mi"
     limits:
       memory: "50Mi"
-
-# async provider
-nats:
-  image: nats-streaming:0.11.2
-  enableMonitoring: false
-  resources:
-    requests:
-      memory: "120Mi"
 
 # ingress configuration
 ingress:
@@ -140,14 +122,6 @@ faasIdler:
   resources:
     requests:
       memory: "64Mi"
-
-basicAuthPlugin:
-  image: openfaas/basic-auth-plugin:0.17.0
-  replicas: 1
-  resources:
-    requests:
-      memory: "50Mi"
-      cpu: "20m"
 
 nodeSelector: {}
 
