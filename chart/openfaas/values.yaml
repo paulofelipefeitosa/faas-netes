@@ -41,7 +41,7 @@ faasnetes:
   image: pfelipefeitosa/faas-netes:latest
   readTimeout : "60s"
   writeTimeout : "60s"
-  imagePullPolicy : "Always"    # Image pull policy for deployed functions
+  imagePullPolicy : "IfNotPresent"    # Image pull policy for deployed functions
   httpProbe: true               # Setting to true will use HTTP for readiness and liveness probe on Pods (incompatible with Istio < 1.1.5)
   setNonRootUser: false
   readinessProbe:
