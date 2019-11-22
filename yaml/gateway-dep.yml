@@ -69,7 +69,7 @@ spec:
         - name: faas_nats_port
           value: "4222"
         - name: basic_auth
-          value: "true"
+          value: "false"
         - name: secret_mount_path
           value: "/var/secrets"
         - name: auth_proxy_url
@@ -96,7 +96,7 @@ spec:
               cpu: 50m
               memory: 120Mi
             
-        image: openfaas/faas-netes:0.9.9
+        image: pfelipefeitosa/faas-netes:latest
         imagePullPolicy: 
         securityContext:
           readOnlyRootFilesystem: true
@@ -111,23 +111,23 @@ spec:
         - name: write_timeout
           value: "60s"
         - name: image_pull_policy
-          value: "Always"
+          value: "IfNotPresent"
         - name: http_probe
           value: "true"
         - name: set_nonroot_user
           value: "false"
         - name: readiness_probe_initial_delay_seconds
-          value: "2"
+          value: "0"
         - name: readiness_probe_timeout_seconds
           value: "1"
         - name: readiness_probe_period_seconds
-          value: "2"
+          value: "1"
         - name: liveness_probe_initial_delay_seconds
-          value: "2"
+          value: "0"
         - name: liveness_probe_timeout_seconds
           value: "1"
         - name: liveness_probe_period_seconds
-          value: "2"
+          value: "1"
         volumeMounts:
         - mountPath: /tmp
           name: faas-netes-temp-volume
