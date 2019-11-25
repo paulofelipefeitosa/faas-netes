@@ -38,7 +38,7 @@ spec:
             - name: inactivity_duration
               value: 1m
             - name: reconcile_interval
-              value: 1m
+              value: 5s
           command:
             - /home/app/faas-idler
             - -dry-run=true
